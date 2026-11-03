@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samit All Games</title>
+<meta name="description" content="Samit All Games – browse and download the latest apps.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f6f7f9; --ink:#14171c; --muted:#5d6572; --line:#e5e8ee;
+    --accent:#1f5eff; --accent-dark:#174ad6; --accent-soft:#eaf0ff; --star:#f5a623; --radius:12px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{font-size:14px;-webkit-text-size-adjust:100%}
+  body{font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  a,button,.card,.row{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+  button{font-family:inherit}
+  a:focus,button:focus{outline:none}
+  a:focus-visible,button:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+  .wrap{max-width:960px;margin:0 auto;padding-left:16px;padding-right:16px}
+  .hidden{display:none!important}
+
+  /* header */
+  header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar{display:flex;align-items:center;justify-content:space-between;height:54px}
+  .brand{font-weight:800;font-size:1.2rem;letter-spacing:-.02em;white-space:nowrap}
+  .menu-btn{width:42px;height:42px;border:0;background:transparent;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer}
+  .menu-btn:active{background:var(--surface)}
+  .menu-btn span{display:block;width:20px;height:2px;border-radius:2px;background:var(--ink);transition:transform .2s,opacity .2s}
+  .menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .menu{position:absolute;left:0;right:0;top:100%;background:var(--bg);border-bottom:1px solid var(--line);box-shadow:0 10px 24px rgba(20,23,28,.08);padding:8px 16px 12px}
+  .menu[hidden]{display:none}
+  .menu a{display:block;max-width:928px;margin:0 auto 4px;padding:12px 14px;border-radius:10px;font-weight:600;color:var(--muted)}
+  .menu a.active{background:var(--accent-soft);color:var(--accent)}
+
+  /* search */
+  .searchbar{padding-top:14px}
+  .search{display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:0 16px;height:44px;color:var(--muted)}
+  .search:focus-within{border-color:var(--accent);background:var(--bg);box-shadow:0 0 0 3px var(--accent-soft)}
+  .search input{flex:1;min-width:0;border:0;outline:none;background:transparent;font:inherit;font-size:1rem;color:var(--ink);-webkit-appearance:none;appearance:none}
+  .search input::-webkit-search-cancel-button{-webkit-appearance:none}
+
+  /* disclaimer */
+  .disclaimer{margin-top:18px;text-align:center;background:#fff8e6;border:1px solid #f1dc9f;border-radius:var(--radius);padding:14px 16px;color:#5b4a12}
+  .disclaimer b{display:block;font-size:1rem;font-weight:800;margin-bottom:4px;color:#4a3a08}
+  .disclaimer p{font-size:.92rem}
+
+  .section{padding-top:22px;padding-bottom:48px}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .section-head h2{font-size:1.25rem;font-weight:800;letter-spacing:-.02em}
+
+  /* buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;font-weight:700;font-size:.95rem;padding:10px 18px;border-radius:999px;border:0;cursor:pointer;transition:background .15s,transform .1s;text-align:center}
+  .btn:hover{background:var(--accent-dark)}
+  .btn:active{transform:scale(.98)}
+  .btn.block{width:100%}
+  .btn.big{padding:14px 20px;font-size:1.05rem}
+  .btn[disabled]{background:#c9d4f5;color:#fff;cursor:default;transform:none}
+
+  /* stars & chips */
+  .rating{display:flex;align-items:center;gap:6px;font-size:.9rem;font-weight:600}
+  .stars{position:relative;display:inline-block;font-size:1rem;line-height:1;letter-spacing:1px;color:#d9dde4;white-space:nowrap}
+  .stars i{position:absolute;left:0;top:0;overflow:hidden;color:var(--star);font-style:normal;white-space:nowrap}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:2px 10px;font-size:.82rem;font-weight:600;color:var(--muted)}
+
+  .chip.hot{background:#fdecea;border-color:#f6b9b2;color:#d92d20;font-weight:700}
+
+  /* cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+  .card{border:1px solid var(--line);border-radius:var(--radius);padding:14px;display:flex;flex-direction:column;gap:12px;background:var(--bg)}
+  .card .top{display:flex;align-items:center;gap:12px;min-width:0}
+  .card .info{display:flex;flex-direction:column;gap:3px;min-width:0}
+  .icon{width:56px;height:56px;border-radius:14px;object-fit:cover;background:var(--surface);flex:none;border:1px solid var(--line)}
+  .card h3{font-size:1.05rem;font-weight:700;overflow-wrap:anywhere;line-height:1.25}
+
+  .list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--line)}
+  .row:last-child{border-bottom:0}
+  .row .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+  .row h3{font-size:1.02rem;font-weight:700;overflow-wrap:anywhere;line-height:1.25}
+  .row .btn{flex:none;padding:8px 16px}
+
+  .state{border:1px dashed var(--line);border-radius:var(--radius);padding:32px 16px;text-align:center;color:var(--muted);background:var(--surface)}
+  .skeleton{height:120px;border-radius:var(--radius);background:linear-gradient(90deg,var(--surface),#eef0f4,var(--surface));background-size:200% 100%;animation:sh 1.3s infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+
+  /* app card (title, red tag, description line, black download button) */
+  .grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+  .card{gap:10px}
+  .card .main{display:flex;align-items:center;gap:10px}
+  .card .lead{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+  .card .icon{width:48px;height:48px;border-radius:12px}
+  .card .info{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+  .card h3{font-size:1.05rem;line-height:1.2}
+  .line{display:flex;align-items:flex-start;gap:6px;font-size:.82rem;font-weight:600;line-height:1.3}
+  .line .ic{flex:none;display:inline-flex;margin-top:1px}
+  .line .tx{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .line.hot{color:#e01b1b}
+  .line.desc{color:var(--ink);font-weight:500}
+  .dl{flex:none;display:inline-flex;align-items:center;gap:7px;background:#000;color:#fff;font-weight:700;font-size:.9rem;padding:11px 14px;border-radius:14px;transition:background .15s,transform .1s}
+  .dl:hover{background:#222}
+  .dl:active{transform:scale(.97)}
+  .dl .ic{display:inline-flex}
+  .card .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding-top:8px;border-top:1px solid var(--line)}
+  .card .meta .rating{font-size:.8rem}
+  .card .meta .stars{font-size:.9rem}
+  .card .meta .chip{font-size:.74rem;padding:1px 9px}
+  @media (max-width:360px){.dl span:not(.ic){display:none}.dl{padding:11px}}
+
+  /* search popup */
+  .searchbar{position:relative}
+  .results{position:absolute;left:16px;right:16px;top:calc(100% + 6px);z-index:25;background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);box-shadow:0 12px 28px rgba(20,23,28,.12);max-height:min(60vh,420px);overflow-y:auto;padding:6px}
+  .results[hidden]{display:none}
+  .res{display:flex;align-items:center;gap:12px;padding:8px;border-radius:10px}
+  .res:hover,.res:active{background:var(--surface)}
+  .res .icon{width:40px;height:40px;border-radius:10px}
+  .res .rt{min-width:0;display:flex;flex-direction:column}
+  .res b{font-weight:700;overflow-wrap:anywhere;line-height:1.25}
+  .res small{color:#e01b1b;font-weight:600;font-size:.78rem}
+  .res-empty{padding:14px;text-align:center;color:var(--muted)}
+
+  /* app page */
+  .crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:.78rem;font-weight:600;color:var(--muted);margin-bottom:12px}
+  .crumbs a{color:var(--accent)}
+  .crumbs .sep{color:#b4bac5}
+  .crumbs .cur{color:var(--ink);overflow-wrap:anywhere}
+  .app-head{display:flex;gap:14px;align-items:center}
+  .app-head .icon{width:76px;height:76px;border-radius:18px}
+  .app-head h1{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;line-height:1.2;overflow-wrap:anywhere}
+  .app-head .info{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .dl-box{margin-top:18px;border:1px solid var(--line);border-radius:var(--radius);padding:14px;background:var(--surface)}
+  .bar-wait{height:4px;border-radius:4px;background:var(--line);margin-top:10px;overflow:hidden}
+  .bar-wait i{display:block;height:100%;width:0;background:var(--accent)}
+  .bar-wait.run i{width:100%;transition:width 3s linear}
+  .dl-hint{margin-top:8px;color:var(--muted);font-size:.88rem;text-align:center}
+  .block-sec{margin-top:22px}
+  .block-sec h2{font-size:1.1rem;font-weight:800;letter-spacing:-.01em;margin-bottom:8px}
+  .block-sec p{color:var(--muted);white-space:pre-line;overflow-wrap:anywhere}
+  .facts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .fact{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+  .fact small{display:block;color:var(--muted);font-weight:600;font-size:.8rem}
+  .fact b{font-weight:700}
+  .steps{padding-left:20px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+  .note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 10px 10px 0;color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);padding:22px 0;color:var(--muted);font-size:.9rem}
+  @media (min-width:700px){html{font-size:15px}.facts{grid-template-columns:repeat(4,1fr)}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  html,body{scroll-behavior:auto!important}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="#home">Samit All Games</a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+  </div>
+  <nav class="menu" id="menu" aria-label="Main" hidden>
+    <a href="#home" id="nav-home">Home</a>
+    <a href="#downloads" id="nav-downloads">Downloads</a>
+  </nav>
+</header>
+
+<div class="wrap searchbar" id="searchbar">
+  <label class="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="Search apps" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search" aria-label="Search apps">
+  </label>
+  <div class="results" id="results" hidden role="listbox" aria-label="Search results"></div>
+</div>
+
+<main id="main"></main>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Samit All Games</div>
+</footer>
+
+<!-- Menu: plain script so it always works, even if Firebase fails to load -->
+<script>
+(function () {
+  var btn = document.getElementById("menu-btn"), menu = document.getElementById("menu");
+  function setOpen(o) {
+    menu.hidden = !o;
+    btn.setAttribute("aria-expanded", o ? "true" : "false");
+    btn.setAttribute("aria-label", o ? "Close menu" : "Open menu");
+  }
+  btn.addEventListener("click", function (e) { e.stopPropagation(); setOpen(menu.hidden); });
+  menu.addEventListener("click", function (e) { if (e.target.closest("a")) setOpen(false); });
+  document.addEventListener("click", function (e) { if (!menu.contains(e.target) && e.target !== btn) setOpen(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(false); });
+  window.addEventListener("hashchange", function () { setOpen(false); });
+})();
+</script>
+
+<script type="module">
+const $ = id => document.getElementById(id);
+$("year").textContent = new Date().getFullYear();
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCluQi-sDHMPd-nhXdLN_r9hITooY5pBk4",
+  authDomain: "all-yono-8265d.firebaseapp.com",
+  projectId: "all-yono-8265d",
+  storageBucket: "all-yono-8265d.firebasestorage.app",
+  messagingSenderId: "258778386747",
+  appId: "1:258778386747:web:734059e6bcc0623ef6e71e",
+  measurementId: "G-H3VVCCKF2T"
+};
+
+/* ---------- helpers ---------- */
+const safeUrl = u => { try { const x = new URL(u); return (x.protocol === "http:" || x.protocol === "https:") ? x.href : ""; } catch { return ""; } };
+const FALLBACK_ICON = "data:image/svg+xml;utf8," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#eaf0ff"/><rect x="16" y="20" width="32" height="24" rx="7" fill="none" stroke="#1f5eff" stroke-width="3"/><path d="M26 32h12M32 26v12" stroke="#1f5eff" stroke-width="3" stroke-linecap="round"/></svg>');
+
+function el(tag, props = {}, children = []) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(props)) { if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v); }
+  children.forEach(c => c && n.appendChild(c));
+  return n;
+}
+function iconEl(a) {
+  const img = el("img", { class: "icon", alt: a.name + " icon", referrerpolicy: "no-referrer" });
+  img.src = safeUrl(a.icon) || FALLBACK_ICON;
+  img.onerror = () => { img.onerror = null; img.src = FALLBACK_ICON; };
+  return img;
+}
+const ratingNum = a => { const r = parseFloat(a.rating); return isFinite(r) && r > 0 ? Math.min(5, r) : null; };
+function ratingEl(a) {
+  const r = ratingNum(a);
+  if (r === null) return el("div", { class: "rating", text: "Not rated yet" });
+  const stars = el("span", { class: "stars", "aria-hidden": "true", text: "★★★★★" });
+  const fill = el("i", { text: "★★★★★" }); fill.style.width = (r / 5 * 100) + "%";
+  stars.appendChild(fill);
+  return el("div", { class: "rating", "aria-label": "Rated " + r.toFixed(1) + " out of 5" }, [stars, el("span", { text: r.toFixed(1) })]);
+}
+function chipsEl(a, withTag = true) {
+  const c = el("div", { class: "chips" });
+  if (a.version) c.appendChild(el("span", { class: "chip", text: "Version " + a.version }));
+  if (a.size) c.appendChild(el("span", { class: "chip", text: a.size }));
+  if (a.tag && withTag) c.appendChild(el("span", { class: "chip hot", text: a.tag }));
+  return c.children.length ? c : null;
+}
+const fmtDate = t => t ? new Date(t).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : "—";
+const appLink = a => "#app/" + encodeURIComponent(a.id);
+
+const SVG = {
+  gift: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13M19 12v9H5v-9M7.5 8a2.5 2.5 0 0 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 0 1 0 5"/></svg>',
+  wallet: '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M3 7a3 3 0 0 1 3-3h11v3H6a1 1 0 0 0 0 2h14a1 1 0 0 1 1 1v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7zm14 7a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4z"/></svg>',
+  download: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"/></svg>'
+};
+function iconLine(cls, svg, text) {
+  const p = el("p", { class: "line " + cls });
+  const s = el("span", { class: "ic", "aria-hidden": "true" }); s.innerHTML = svg; /* static trusted SVG only */
+  p.appendChild(s); p.appendChild(el("span", { class: "tx", text }));
+  return p;
+}
+const descLine = a => String(a.description || "").split("\n")[0].trim();
+
+function card(a) {
+  const info = el("div", { class: "info" }, [el("h3", { text: a.name })]);
+  if (a.tag) info.appendChild(iconLine("hot", SVG.gift, a.tag));
+  if (descLine(a)) info.appendChild(iconLine("desc", SVG.wallet, descLine(a)));
+
+  const btn = el("a", { class: "dl", href: appLink(a), "aria-label": a.name + " download" });
+  const ic = el("span", { class: "ic", "aria-hidden": "true" }); ic.innerHTML = SVG.download;
+  btn.appendChild(ic); btn.appendChild(el("span", { text: "Download" }));
+
+  const meta = el("div", { class: "meta" }, [ratingEl(a), chipsEl(a, false)]);
+  return el("article", { class: "card" }, [
+    el("div", { class: "main" }, [el("a", { class: "lead", href: appLink(a) }, [iconEl(a), info]), btn]),
+    meta
+  ]);
+}
+function crumbs(items) {
+  const nav = el("nav", { class: "crumbs", "aria-label": "Location" });
+  items.forEach(([label, href], i) => {
+    if (i) nav.appendChild(el("span", { class: "sep", "aria-hidden": "true", text: "/" }));
+    const last = i === items.length - 1;
+    nav.appendChild(href && !last ? el("a", { href, text: label }) : el("span", { class: "cur", text: label }));
+  });
+  return nav;
+}
+const empty = msg => el("div", { class: "state", text: msg });
+const skeletons = n => { const f = document.createDocumentFragment(); for (let i = 0; i < n; i++) f.appendChild(el("div", { class: "skeleton" })); return f; };
+
+/* ---------- state ---------- */
+let apps = [], loaded = false, failed = false, timer = null;
+const visible = () => apps;
+
+/* search popup */
+const qIn = $("q"), resBox = $("results");
+function showResults() {
+  const t = qIn.value.trim().toLowerCase();
+  resBox.replaceChildren();
+  if (!t) { resBox.hidden = true; return; }
+  if (!loaded) resBox.appendChild(el("div", { class: "res-empty", text: "Loading…" }));
+  else {
+    const found = apps.filter(a => [a.name, a.tag, a.version].join(" ").toLowerCase().includes(t));
+    if (!found.length) resBox.appendChild(el("div", { class: "res-empty", text: "No apps found" }));
+    found.forEach(a => {
+      const link = el("a", { class: "res", href: appLink(a), role: "option" }, [iconEl(a), el("div", { class: "rt" }, [el("b", { text: a.name }), a.tag ? el("small", { text: a.tag }) : null])]);
+      link.addEventListener("click", () => { resBox.hidden = true; qIn.value = ""; });
+      resBox.appendChild(link);
+    });
+  }
+  resBox.hidden = false;
+}
+qIn.addEventListener("input", showResults);
+qIn.addEventListener("focus", showResults);
+document.addEventListener("click", e => { if (!$("searchbar").contains(e.target)) resBox.hidden = true; });
+document.addEventListener("keydown", e => { if (e.key === "Escape") resBox.hidden = true; });
+
+/* ---------- views ---------- */
+function homeView() {
+  const f = document.createDocumentFragment();
+
+  f.appendChild(el("section", { class: "wrap" }, [
+    el("div", { class: "disclaimer", role: "note" }, [
+      el("b", { text: "Disclaimer" }),
+      el("p", { text: "Apps listed here are third-party apps. Download and use them at your own risk. Samit All Games is not responsible for any loss, damage or issue caused by any app. Please read each app's terms before using it." })
+    ])
+  ]));
+
+  const grid = el("div", { class: "grid", "aria-live": "polite" });
+  if (!loaded) grid.appendChild(skeletons(3));
+  else if (failed) { grid.style.display = "block"; grid.appendChild(empty("Could not load apps. Check your internet and refresh the page.")); }
+  else if (!apps.length) { grid.style.display = "block"; grid.appendChild(empty("No apps yet. New apps are coming soon.")); }
+  else if (!visible().length) { grid.style.display = "block"; grid.appendChild(empty("No apps found. Try a different name.")); }
+  else visible().forEach(a => grid.appendChild(card(a)));
+
+  f.appendChild(el("section", { class: "wrap section" }, [
+    el("div", { class: "section-head" }, [el("h2", { text: "App list" })]),
+    grid
+  ]));
+  return f;
+}
+
+function downloadsView() {
+  const box = el("div", { "aria-live": "polite" });
+  if (!loaded) box.appendChild(skeletons(1));
+  else if (failed) box.appendChild(empty("Could not load apps. Refresh the page."));
+  else if (!apps.length) box.appendChild(empty("No downloads available yet."));
+  else { const l = el("div", { class: "grid" }); apps.forEach(a => l.appendChild(card(a))); box.appendChild(l); }
+  return el("section", { class: "wrap section" }, [crumbs([["Home", "#home"], ["Downloads", null]]), el("div", { class: "section-head" }, [el("h2", { text: "Downloads" })]), box]);
+}
+
+function appView(id) {
+  const wrap = el("section", { class: "wrap section" });
+  if (!loaded) { wrap.appendChild(crumbs([["Home", "#home"]])); wrap.appendChild(skeletons(2)); return wrap; }
+  const a = apps.find(x => x.id === id);
+  const crumbBar = crumbs([["Home", "#home"], [a ? a.name : "App", null]]);
+  wrap.appendChild(crumbBar);
+  if (!a) { wrap.appendChild(empty(failed ? "Could not load this app. Refresh the page." : "This app is not available.")); return wrap; }
+  document.title = a.name + " – Samit All Games";
+
+  wrap.appendChild(el("div", { class: "app-head" }, [iconEl(a), el("div", { class: "info" }, [el("h1", { text: a.name }), ratingEl(a), chipsEl(a)])]));
+
+  /* download with 3 second wait */
+  const url = safeUrl(a.url);
+  const slot = el("div");
+  const bar = el("div", { class: "bar-wait hidden" }, [el("i")]);
+  const hint = el("p", { class: "dl-hint", text: url ? "Tap Download and wait 3 seconds." : "Download link is not available right now." });
+  const start = el("button", { class: "btn big block", type: "button", text: "Download" });
+  if (!url) start.disabled = true;
+  slot.appendChild(start);
+  start.addEventListener("click", () => {
+    let left = 3;
+    crumbBar.replaceWith(crumbs([["Home", "#home"], [a.name, null], ["Download", null]]));
+    start.disabled = true; start.textContent = "Please wait " + left + "s";
+    bar.classList.remove("hidden"); void bar.offsetWidth; bar.classList.add("run");
+    hint.textContent = "Your download link is getting ready…";
+    clearInterval(timer);
+    timer = setInterval(() => {
+      left--;
+      if (left > 0) { start.textContent = "Please wait " + left + "s"; return; }
+      clearInterval(timer);
+      const go = el("button", { class: "btn big block", type: "button", disabled: "" , text: "Download starting…" });
+      slot.replaceChildren(go); bar.classList.add("hidden");
+      hint.replaceChildren(document.createTextNode("If the download does not start, "), el("a", { href: url, rel: "noopener noreferrer", style: "color:var(--accent);font-weight:700", text: "tap here" }), document.createTextNode("."));
+      window.location.href = url;
+    }, 1000);
+  });
+  wrap.appendChild(el("div", { class: "dl-box" }, [slot, bar, hint]));
+
+  wrap.appendChild(el("div", { class: "block-sec" }, [el("h2", { text: "About this app" }), el("p", { text: a.description || "No description has been added for this app yet." })]));
+
+  const fact = (k, v) => el("div", { class: "fact" }, [el("small", { text: k }), el("b", { text: v })]);
+  const r = ratingNum(a);
+  wrap.appendChild(el("div", { class: "block-sec" }, [
+    el("h2", { text: "App information" }),
+    el("div", { class: "facts" }, [
+      fact("Version", a.version || "—"), fact("Size", a.size || "—"),
+      fact("Rating", r === null ? "—" : r.toFixed(1) + " / 5"), fact("Updated", fmtDate(a.updatedAt || a.createdAt))
+    ])
+  ]));
+
+  const steps = el("ol", { class: "steps" });
+  ["Tap Download and wait 3 seconds. The download starts automatically.",
+   "Open the downloaded file from your notifications or file manager.",
+   "If your phone asks, allow installing apps from this source.",
+   "Tap Install and open the app when it finishes."].forEach(s => steps.appendChild(el("li", { text: s })));
+  wrap.appendChild(el("div", { class: "block-sec" }, [el("h2", { text: "How to install" }), steps]));
+
+  wrap.appendChild(el("div", { class: "block-sec" }, [
+    el("h2", { text: "Before you download" }),
+    el("div", { class: "note", text: "Make sure you have enough free storage and a stable internet connection. Download apps only from links you trust." })
+  ]));
+  return wrap;
+}
+
+/* ---------- routing ---------- */
+function render() {
+  clearInterval(timer);
+  const h = location.hash || "#home";
+  const main = $("main"); main.replaceChildren();
+  document.title = "Samit All Games";
+  let page = "home";
+  if (h === "#downloads") { page = "downloads"; main.appendChild(downloadsView()); }
+  else if (h.startsWith("#app/")) { page = "app"; main.appendChild(appView(decodeURIComponent(h.slice(5)))); }
+  else main.appendChild(homeView());
+  $("searchbar").classList.toggle("hidden", page === "app");
+  if (!resBox.hidden) showResults();
+  $("nav-home").classList.toggle("active", page === "home" || page === "app");
+  $("nav-downloads").classList.toggle("active", page === "downloads");
+}
+addEventListener("hashchange", () => {
+  resBox.hidden = true;
+  render();
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+});
+render();
+
+/* ---------- Firebase (loaded safely) ---------- */
+(async () => {
+  try {
+    const [{ initializeApp }, { getDatabase, ref, onValue }] = await Promise.all([
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"),
+      import("https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js")
+    ]);
+    const fbApp = initializeApp(firebaseConfig);
+    const db = getDatabase(fbApp);
+    onValue(ref(db, "apps"), snap => {
+      const list = [];
+      snap.forEach(c => { const v = c.val(); if (v && v.published === true && v.name) list.push({ id: c.key, ...v }); });
+      list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      apps = list; loaded = true; failed = false; render();
+    }, () => { failed = true; loaded = true; render(); });
+    import("https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js")
+      .then(m => m.isSupported().then(ok => ok && m.getAnalytics(fbApp)))
+      .catch(() => {});
+  } catch (e) {
+    failed = true; loaded = true; render();
+  }
+})();
+</script>
+</body>
+</html>
